@@ -1,36 +1,39 @@
 package ru.geekbrains.stargame.screen.impl;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.stargame.math.Rect;
 import ru.geekbrains.stargame.screen.BaseScreen;
-import ru.geekbrains.stargame.sprite.Logo;
 import ru.geekbrains.stargame.sprite.impl.Background;
+import ru.geekbrains.stargame.sprite.impl.Star;
 
 public class MenuScreen extends BaseScreen {
 
-    private Texture img;
     private Texture bg;
-
     private Background background;
-    private Logo logo;
+
+    private TextureAtlas atlas;
+    private Star star;
+
 
     @Override
     public void show() {
         super.show();
-        img = new Texture("badlogic.jpg");
         bg = new Texture("textures/bg.png");
         background = new Background(bg);
-        logo = new Logo(img);
+
+        atlas = new TextureAtlas("textures/menuAtlas.tpack");
+
+        star = new Star(atlas);
     }
 
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
-        logo.resize(worldBounds);
+        star.resize(worldBounds);
     }
 
     @Override
@@ -44,24 +47,23 @@ public class MenuScreen extends BaseScreen {
     @Override
     public void dispose() {
         super.dispose();
-        img.dispose();
         bg.dispose();
+        atlas.dispose();
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        logo.touchDown(touch, pointer, button);
         return false;
     }
 
     private void draw(){
         batch.begin();
         background.draw(batch);
-        logo.draw(batch);
+        star.draw(batch);
         batch.end();
     }
 
     private void update(float delta){
-        logo.update(delta);
+        star.update(delta);
     }
 }
