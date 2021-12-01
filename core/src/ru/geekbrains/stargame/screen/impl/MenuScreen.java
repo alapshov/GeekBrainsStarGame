@@ -1,5 +1,6 @@
 package ru.geekbrains.stargame.screen.impl;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -7,16 +8,27 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.stargame.math.Rect;
 import ru.geekbrains.stargame.screen.BaseScreen;
 import ru.geekbrains.stargame.sprite.impl.Background;
+import ru.geekbrains.stargame.sprite.impl.ButtonExit;
+import ru.geekbrains.stargame.sprite.impl.ButtonPlay;
 import ru.geekbrains.stargame.sprite.impl.Star;
 
 public class MenuScreen extends BaseScreen {
+
+    private static final int STAR_COUNT = 256;
+
+    private final Game game;
 
     private Texture bg;
     private Background background;
 
     private TextureAtlas atlas;
-    private Star star;
+    private Star[] stars;
+    private ButtonExit buttonExit;
+    private ButtonPlay buttonPlay;
 
+    public MenuScreen(Game game){
+        this.game = game;
+    }
 
     @Override
     public void show() {
@@ -26,14 +38,23 @@ public class MenuScreen extends BaseScreen {
 
         atlas = new TextureAtlas("textures/menuAtlas.tpack");
 
-        star = new Star(atlas);
+        stars = new Star[STAR_COUNT];
+        for (int i = 0; i < stars.length; i++) {
+            stars[i] = new Star(atlas);
+        }
+        buttonExit = new ButtonExit(atlas);
+        buttonPlay = new ButtonPlay(atlas, game);
     }
 
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
-        star.resize(worldBounds);
+        for (Star star : stars) {
+            star.resize(worldBounds);
+        }
+        buttonExit.resize(worldBounds);
+        buttonPlay.resize(worldBounds);
     }
 
     @Override
@@ -53,17 +74,32 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
+        buttonExit.touchDown(touch, pointer, button);
+        buttonPlay.touchDown(touch, pointer, button);
         return false;
     }
 
-    private void draw(){
+    @Override
+    public boolean touchUp(Vector2 touch, int pointer, int button) {
+        buttonExit.touchUp(touch, pointer, button);
+        buttonPlay.touchUp(touch, pointer, button);
+        return false;
+    }
+
+    private void draw() {
         batch.begin();
         background.draw(batch);
-        star.draw(batch);
+        for (Star star : stars) {
+            star.draw(batch);
+        }
+        buttonExit.draw(batch);
+        buttonPlay.draw(batch);
         batch.end();
     }
 
-    private void update(float delta){
-        star.update(delta);
+    private void update(float delta) {
+        for (Star star : stars) {
+            star.update(delta);
+        }
     }
 }
