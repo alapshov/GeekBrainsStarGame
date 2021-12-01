@@ -2,7 +2,6 @@ package ru.geekbrains.stargame.sprite.impl;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import ru.geekbrains.stargame.math.Rect;
 import ru.geekbrains.stargame.screen.impl.GameScreen;
