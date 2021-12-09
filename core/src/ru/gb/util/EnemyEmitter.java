@@ -50,22 +50,21 @@ public class EnemyEmitter {
 
     private float generateTimer;
 
-
     public EnemyEmitter(TextureAtlas atlas, Rect worldBounds, EnemyPool enemyPool) {
         this.worldBounds = worldBounds;
         this.bulletRegion = atlas.findRegion("bulletEnemy");
         this.enemyPool = enemyPool;
-        this.enemySmallRegions = Regions.split(atlas.findRegion("enemy0"), 1, 2, 2);
-        this.enemyMediumRegions = Regions.split(atlas.findRegion("enemy1"), 1, 2, 2);
-        this.enemyBigRegions = Regions.split(atlas.findRegion("enemy2"), 1, 2, 2);
+        enemySmallRegions = Regions.split(atlas.findRegion("enemy0"), 1, 2, 2);
+        enemyMediumRegions = Regions.split(atlas.findRegion("enemy1"), 1, 2, 2);
+        enemyBigRegions = Regions.split(atlas.findRegion("enemy2"), 1, 2, 2);
     }
 
     public void generate(float delta) {
         generateTimer += delta;
         if (generateTimer > GENERATE_INTERVAL) {
-            generateTimer = 0;
+            generateTimer = 0f;
             EnemyShip enemyShip = enemyPool.obtain();
-            float type = (float) MathUtils.random();
+            float type = (float) Math.random();
             if (type < 0.5f) {
                 enemyShip.set(
                         enemySmallRegions,
@@ -76,7 +75,8 @@ public class EnemyEmitter {
                         ENEMY_SMALL_BULLET_DAMAGE,
                         ENEMY_SMALL_RELOAD_INTERVAL,
                         ENEMY_SMALL_HEIGHT,
-                        ENEMY_SMALL_HP);
+                        ENEMY_SMALL_HP
+                );
             } else if (type < 0.8f) {
                 enemyShip.set(
                         enemyMediumRegions,
@@ -87,7 +87,8 @@ public class EnemyEmitter {
                         ENEMY_MEDIUM_BULLET_DAMAGE,
                         ENEMY_MEDIUM_RELOAD_INTERVAL,
                         ENEMY_MEDIUM_HEIGHT,
-                        ENEMY_MEDIUM_HP);
+                        ENEMY_MEDIUM_HP
+                );
             } else {
                 enemyShip.set(
                         enemyBigRegions,
@@ -98,9 +99,9 @@ public class EnemyEmitter {
                         ENEMY_BIG_BULLET_DAMAGE,
                         ENEMY_BIG_RELOAD_INTERVAL,
                         ENEMY_BIG_HEIGHT,
-                        ENEMY_BIG_HP);
+                        ENEMY_BIG_HP
+                );
             }
-
             enemyShip.setBottom(worldBounds.getTop());
             enemyShip.pos.x = MathUtils.random(
                     worldBounds.getLeft() + enemyShip.getHalfWidth(),
