@@ -3,7 +3,7 @@ package ru.geekbrains.stargame.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import ru.geekbrains.stargame.StarGame;
+import ru.gb.StarGame;
 
 public class HtmlLauncher extends GwtApplication {
 
