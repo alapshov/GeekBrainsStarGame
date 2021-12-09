@@ -7,11 +7,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.gb.math.Rect;
 import ru.gb.pool.impl.BulletPool;
 import ru.gb.pool.impl.EnemyPool;
 import ru.gb.screen.BaseScreen;
 import ru.gb.sprite.impl.Background;
+import ru.gb.sprite.impl.Bullet;
+import ru.gb.sprite.impl.EnemyShip;
 import ru.gb.sprite.impl.MainShip;
 import ru.gb.sprite.impl.Star;
 import ru.gb.util.EnemyEmitter;
@@ -65,6 +70,7 @@ public class GameScreen extends BaseScreen {
     public void render(float delta) {
         super.render(delta);
         update(delta);
+        checkCollisions();
         freeAllDestroyed();
         draw();
     }
@@ -123,6 +129,40 @@ public class GameScreen extends BaseScreen {
         bulletPool.updateActiveSprites(delta);
         enemyPool.updateActiveSprites(delta);
         enemyEmitter.generate(delta);
+    }
+
+    private void checkCollisions() {
+        List<EnemyShip> enemyShipList = enemyPool.getActiveObjects();
+        for (EnemyShip enemyShip : enemyShipList) {
+            if (enemyShip.isDestroyed()) {
+                continue;
+            }
+            float minDist = (mainShip.getWidth() + enemyShip.getWidth()) * 0.5f;
+            if (mainShip.pos.dst(enemyShip.pos) < minDist) {
+                mainShip.damage(enemyShip.getHp() * 2);
+                enemyShip.destroy();
+            }
+        }
+        List<Bullet> bulletList = bulletPool.getActiveObjects();
+        for (Bullet bullet : bulletList) {
+            if (bullet.isDestroyed()) {
+                continue;
+            }
+            if (bullet.getOwner() != mainShip) {
+                mainShip.damage(bullet.getDamage());
+                bullet.destroy();
+                continue;
+            }
+            for (EnemyShip enemyShip : enemyShipList) {
+                if (enemyShip.isDestroyed()) {
+                    continue;
+                }
+                if (!bullet.isOutside(enemyShip)) {
+                    enemyShip.damage(bullet.getDamage());
+                    bullet.destroy();
+                }
+            }
+        }
     }
 
     private void freeAllDestroyed() {
